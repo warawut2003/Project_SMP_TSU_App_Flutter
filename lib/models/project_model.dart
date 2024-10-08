@@ -1,14 +1,15 @@
 // To parse this JSON data, do
 //
-//     final userModel = userModelFromJson(jsonString);
+//     final projectModel = projectModelFromJson(jsonString);
 
 import 'dart:convert';
 
-UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
+ProjectModel projectModelFromJson(String str) =>
+    ProjectModel.fromJson(json.decode(str));
 
-String userModelToJson(UserModel data) => json.encode(data.toJson());
+String projectModelToJson(ProjectModel data) => json.encode(data.toJson());
 
-class UserModel {
+class ProjectModel {
   String projectId;
   String projectName;
   String projectFile;
@@ -16,7 +17,7 @@ class UserModel {
   DateTime projectExpirationDate;
   String adminIdFk;
 
-  UserModel({
+  ProjectModel({
     required this.projectId,
     required this.projectName,
     required this.projectFile,
@@ -25,7 +26,7 @@ class UserModel {
     required this.adminIdFk,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+  factory ProjectModel.fromJson(Map<String, dynamic> json) => ProjectModel(
         projectId: json["project_id"],
         projectName: json["project_name"],
         projectFile: json["project_file"],

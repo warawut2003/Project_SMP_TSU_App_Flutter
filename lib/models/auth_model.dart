@@ -1,38 +1,39 @@
 // To parse this JSON data, do
 //
-//     final userModel = userModelFromJson(jsonString);
+//     final adminModel = adminModelFromJson(jsonString);
 
 import 'dart:convert';
 
-UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
+AdminModel adminModelFromJson(String str) =>
+    AdminModel.fromJson(json.decode(str));
 
-String userModelToJson(UserModel data) => json.encode(data.toJson());
+String adminModelToJson(AdminModel data) => json.encode(data.toJson());
 
-class UserModel {
-  User user;
+class AdminModel {
+  Admin admin;
   String accessToken;
   String refreshToken;
 
-  UserModel({
-    required this.user,
+  AdminModel({
+    required this.admin,
     required this.accessToken,
     required this.refreshToken,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        user: User.fromJson(json["user"]),
+  factory AdminModel.fromJson(Map<String, dynamic> json) => AdminModel(
+        admin: Admin.fromJson(json["admin"]),
         accessToken: json["accessToken"],
         refreshToken: json["refreshToken"],
       );
 
   Map<String, dynamic> toJson() => {
-        "user": user.toJson(),
+        "admin": admin.toJson(),
         "accessToken": accessToken,
         "refreshToken": refreshToken,
       };
 }
 
-class User {
+class Admin {
   String adminId;
   String adminUsername;
   String adminFname;
@@ -40,7 +41,7 @@ class User {
   String adminTel;
   String adminEmail;
 
-  User({
+  Admin({
     required this.adminId,
     required this.adminUsername,
     required this.adminFname,
@@ -49,7 +50,7 @@ class User {
     required this.adminEmail,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
+  factory Admin.fromJson(Map<String, dynamic> json) => Admin(
         adminId: json["admin_id"],
         adminUsername: json["admin_username"],
         adminFname: json["admin_Fname"],

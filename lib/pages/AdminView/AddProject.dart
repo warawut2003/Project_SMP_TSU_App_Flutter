@@ -30,35 +30,35 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   String? _uploadedFilePath; // To store the URL of the uploaded file
 
   // แยกฟังก์ชันสำหรับเพิ่มสินค้า
-  void _addNewProject() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
+    void _addNewProject() async {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
 
-      if (_uploadedFilePath != null) {
-        // Upload the file and get the download URL
-        String fileDownloadUrl = await _uploadFile(_uploadedFilePath!);
+        if (_uploadedFilePath != null) {
+          // Upload the file and get the download URL
+          String fileDownloadUrl = await _uploadFile(_uploadedFilePath!);
 
-        // Save the new project data by calling the InsertProject function
-        _projectController.InsertProject(
-          context,
-          _projectNameController.text,
-          fileDownloadUrl, // Use the download URL here
-          _startDate!,
-          _endDate!,
-        ).then((response) {
-          // Check if the project was added successfully
-          if (response.statusCode == 201) {
-            // Success action here (e.g., navigate back or show success message)
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('เพิ่มโครงการเรียบร้อยแล้ว')),
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => HomeAdminScreen(),
-              ),
-            );
-          } else if (response.statusCode == 401) {
+          // Save the new project data by calling the InsertProject function
+          _projectController.InsertProject(
+            context,
+            _projectNameController.text,
+            fileDownloadUrl, // Use the download URL here
+            _startDate!,
+            _endDate!,
+          ).then((response) {
+            // Check if the project was added successfully
+            if (response.statusCode == 201) {
+              // Success action here (e.g., navigate back or show success message)
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('เพิ่มโครงการเรียบร้อยแล้ว')),
+              );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeAdminScreen(),
+                ),
+              );
+            } else if (response.statusCode == 401) {
             // Show a message when there's an error adding the project
             Navigator.push(
               context,

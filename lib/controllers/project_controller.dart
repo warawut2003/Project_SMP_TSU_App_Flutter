@@ -188,4 +188,35 @@ class ProjectController {
       throw Exception('Failed to delete product due to error: $error');
     }
   }
+
+ Future<ProjectModel> getProjectLatest() async {
+  try {
+    final response = await http.get(
+      Uri.parse('$apiURL/api/project/latest'),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
+
+    print('Status Code: ${response.statusCode}');
+
+    if (response.statusCode == 200) {
+      // ตรวจสอบการตอบกลับที่ได้
+      final List<dynamic> data = jsonDecode(response.body);
+      print('Response data: $data');
+
+      // ตรวจสอบว่ามีข้อมูลในลิสต์
+      if (data.isNotEmpty) {
+        return ProjectModel.fromJson(data[0]); // แปลงโปรเจกต์ตัวแรกในลิสต์
+      } else {
+        throw Exception('No project data found');
+      }
+    } else {
+      throw Exception('Failed to load project with status code: ${response.statusCode}');
+    }
+  } catch (err) {
+    print('Error in getProjectLatest: $err');
+    throw Exception('Failed to load project: $err');
+  }
+}
 }

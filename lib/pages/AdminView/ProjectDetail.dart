@@ -1,5 +1,5 @@
 import 'package:firebase_storage/firebase_storage.dart';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:project_smp_tsu_application/controllers/project_controller.dart';
 import 'package:project_smp_tsu_application/models/project_model.dart';
@@ -97,6 +97,15 @@ class ProjectDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+
+    // Create a formatter for date and time
+    final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
+
+    // Format the start and expiration dates
+    final String formattedStartDate =
+        formatter.format(project.projectStartDate.toLocal());
+    final String formattedExpirationDate =
+        formatter.format(project.projectExpirationDate.toLocal());
 
     return Scaffold(
       body: Container(
@@ -234,7 +243,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '${project.projectStartDate.toLocal().toString().split(' ')[0]}',
+                            formattedStartDate,
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 20),
@@ -247,7 +256,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '${project.projectExpirationDate.toLocal().toString().split(' ')[0]}',
+                            formattedExpirationDate,
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 30),

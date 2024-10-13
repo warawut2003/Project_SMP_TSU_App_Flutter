@@ -17,8 +17,8 @@ class AuthController {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(
           {
-            "username": username,
-            "password": password,
+            "admin_username": username,
+            "admin_password": password,
           },
         ));
 
@@ -38,12 +38,12 @@ class AuthController {
   Future<void> register(BuildContext context, String username, String password,
       String Fname, String Lname, String tel, String email) async {
     final Map<String, dynamic> registerData = {
-      "username": username,
-      "password": password,
-      "Fname": Fname,
-      "Lname": Lname,
-      "telephone": tel,
-      "email": email,
+      "admin_username": username,
+      "admin_password": password,
+      "admin_Fname": Fname,
+      "admin_Lname": Lname,
+      "admin_tel": tel,
+      "admin_email": email,
     };
 
     final response = await http.post(

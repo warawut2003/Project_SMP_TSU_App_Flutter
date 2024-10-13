@@ -84,6 +84,13 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
         isStartDate ? DateTime.now() : (_startDate ?? DateTime.now());
     DateTime lastDate = DateTime(2101); // กำหนดวันสุดท้ายเป็นปี 2101
 
+    // ตรวจสอบว่า initialDate อยู่ระหว่าง firstDate และ lastDate
+    if (initialDate.isBefore(firstDate)) {
+      initialDate = firstDate;
+    } else if (initialDate.isAfter(lastDate)) {
+      initialDate = lastDate;
+    }
+
     DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: initialDate,

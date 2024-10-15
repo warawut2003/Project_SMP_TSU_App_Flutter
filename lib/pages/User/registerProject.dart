@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:project_smp_tsu_application/controllers/project_controller.dart';
@@ -11,7 +14,8 @@ import 'package:provider/provider.dart';
 class RegisterProjectPage extends StatefulWidget {
   final ProjectModel project;
 
-  const RegisterProjectPage({Key? key, required this.project}) : super(key: key);
+  const RegisterProjectPage({Key? key, required this.project})
+      : super(key: key);
   @override
   _RegisterProjectPageState createState() => _RegisterProjectPageState();
 }
@@ -31,55 +35,110 @@ class _RegisterProjectPageState extends State<RegisterProjectPage> {
   String userPhoneNum = '';
   String userEmail = '';
   String userStatus = 'รอการตรวจสอบ'; // ตั้งค่าเริ่มต้นที่นี่
-  String userImage = 'here'; // ตัวแปรสำหรับ URL ของภาพ
-  String userFile = 'are you here'; // ตัวแปรสำหรับ URL ของเอกสาร
+  String userImage = ''; // ตัวแปรสำหรับ URL ของภาพ
+  String userFile = ''; // ตัวแปรสำหรับ URL ของเอกสาร
+
+  String? _uploadedImagePath;
+  String? _uploadedDocumentPath;
 
   void _CreateNewUser() async {
-    
+    // เพิ่ม async ที่นี่
     print(widget.project.projectId);
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
+      try {
+        // ตรวจสอบว่ามีการเลือกไฟล์ทั้งสองก่อนดำเนินการ
+        if (_uploadedImagePath == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('กรุณาเลือกไฟล์ภาพ')),
+          );
+          return; // ออกจากฟังก์ชันหากไม่เลือกไฟล์ภาพ
+        }
+        if (_uploadedDocumentPath == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('กรุณาเลือกเอกสาร')),
+          );
+          return; // ออกจากฟังก์ชันหากไม่เลือกเอกสาร
+        }
 
-      _formKey.currentState!.save();
-      print("Preparing to create a new user...");
-      // บันทึกข้อมูลโครงการใหม่โดยเรียกใช้ฟังก์ชัน InsertProject
-      userController
-          .createUser(
-              context,
-              nationalId, 
-              userPrefix, 
-              userFname,
-              userLname,
-              userGender,
-              userDateBirth,
-              userAge,
-              userPhoneNum,
-              userEmail,
-              userStatus, 
-              userImage,
-              userFile,
-              widget.project.projectId,)
-          .then((response) {
-        print("Response received: ${response.statusCode}");
+        // เตรียมเส้นทางสำหรับการอัปโหลด
+        String imagePath =
+            'assets/users/image/$userFname $userLname/${DateTime.now().millisecondsSinceEpoch}';
+        String documentPath =
+            'assets/users/document/$userFname $userLname/${DateTime.now().millisecondsSinceEpoch}';
+
+        // ดำเนินการอัปโหลดภาพ
+        userImage = await _uploadFile(_uploadedImagePath!, imagePath);
+
+        // ดำเนินการอัปโหลดเอกสาร
+        userFile = await _uploadFile(_uploadedDocumentPath!, documentPath);
+
+        // ดำเนินการสร้างผู้ใช้
+        final response = await userController.createUser(
+          context,
+          nationalId,
+          userPrefix,
+          userFname,
+          userLname,
+          userGender,
+          userDateBirth,
+          userAge,
+          userPhoneNum,
+          userEmail,
+          userStatus,
+          userImage,
+          userFile,
+          widget.project.projectId,
+        );
 
         if (response.statusCode == 201) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('เพิ่มโครงการเรียบร้อยแล้ว')),
+            const SnackBar(content: Text('สมัครเข้าร่วมโครงการสำเร็จ')),
           );
-          Navigator.push(
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => HomePage(),
+              builder: (context) => const HomePage(),
             ),
           );
         } else if (response.statusCode == 401) {
           print('Error: Unauthorized');
         }
-      }).catchError((error) {
-        print("Error occurred: $error");
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('เกิดข้อผิดพลาด: $error')),
+          SnackBar(content: Text('เกิดข้อผิดพลาด: $e')),
         );
-      });
+      }
+    }
+  }
+
+  Future<String> _uploadFile(String filePath, String destination) async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference ref = storage
+          .ref()
+          .child('$destination${DateTime.now().millisecondsSinceEpoch}');
+      await ref.putFile(File(filePath));
+      return await ref.getDownloadURL();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<void> _selectFile({required bool isImage}) async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: isImage ? FileType.image : FileType.custom,
+        allowedExtensions: isImage ? null : ['pdf', 'doc', 'docx']);
+    if (result != null) {
+      String? filePath = result.files.single.path;
+      if (filePath != null) {
+        setState(() {
+          if (isImage) {
+            _uploadedImagePath = filePath;
+          } else {
+            _uploadedDocumentPath = filePath;
+          }
+        });
+      }
     }
   }
 
@@ -93,7 +152,8 @@ class _RegisterProjectPageState extends State<RegisterProjectPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
-          child: Form( // ใช้ Form widget รอบฟอร์มของคุณ
+          child: Form(
+            // ใช้ Form widget รอบฟอร์มของคุณ
             key: _formKey, // ใส่ _formKey ที่นี่
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,7 +243,8 @@ class _RegisterProjectPageState extends State<RegisterProjectPage> {
                 ),
                 // วันเดือนปีเกิด
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'วันเดือนปีเกิด'),
+                  decoration:
+                      const InputDecoration(labelText: 'วันเดือนปีเกิด'),
                   onTap: () async {
                     FocusScope.of(context).requestFocus(FocusNode());
                     final DateTime? picked = await showDatePicker(
@@ -227,7 +288,28 @@ class _RegisterProjectPageState extends State<RegisterProjectPage> {
                   },
                 ),
 
-                // ปุ่มสมัคร
+                const SizedBox(height: 20),
+
+                // Image upload
+                ElevatedButton(
+                  onPressed: () => _selectFile(isImage: true),
+                  child: const Text('อัปโหลดรูปภาพ'),
+                ),
+                _uploadedImagePath != null
+                    ? Text('Selected Image: $_uploadedImagePath')
+                    : Container(),
+
+                const SizedBox(height: 10),
+
+                // Document upload
+                ElevatedButton(
+                  onPressed: () => _selectFile(isImage: false),
+                  child: const Text('อัปโหลดเอกสาร'),
+                ),
+                _uploadedDocumentPath != null
+                    ? Text('Selected Document: $_uploadedDocumentPath')
+                    : Container(),
+
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _CreateNewUser,

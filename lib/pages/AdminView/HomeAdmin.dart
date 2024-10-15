@@ -3,6 +3,7 @@ import 'package:project_smp_tsu_application/controllers/project_controller.dart'
 import 'package:project_smp_tsu_application/models/project_model.dart';
 import 'package:project_smp_tsu_application/pages/AdminView/AddProject.dart';
 import 'package:project_smp_tsu_application/pages/AdminView/ProjectDetail.dart';
+import 'package:project_smp_tsu_application/pages/HomePage.dart';
 
 import 'dart:math';
 import 'package:project_smp_tsu_application/widget/customCliper.dart';
@@ -179,6 +180,27 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
                       ),
                       child: const Text(
                         'เพิ่มโครงการใหม่',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Navigate to HomePage Button
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                HomePage(), // Replace with your actual HomePage widget
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff821131),
+                      ),
+                      child: const Text(
+                        'กลับไปยังหน้าแรก',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),

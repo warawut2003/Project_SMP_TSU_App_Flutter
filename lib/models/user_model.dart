@@ -44,7 +44,7 @@ class UserModel {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        userId: json["User_id"],
+        userId: json["user_id"],
         nationalId: json["National_ID"],
         userPrefix: json["User_prefix"],
         userFname: json["User_Fname"],
@@ -54,15 +54,15 @@ class UserModel {
         userAge: json["User_age"],
         userPhoneNum: json["User_phone_num"],
         userEmail: json["User_email"],
-        userStatus: json["User_status"],
+        userStatus: json["user_status"],
         userImage: json["User_Image"],
         userFile: json["User_file"],
-        adminIdFk: json["admin_id_FK"],
-        projectIdFk: json["project_id_fk"],
+        adminIdFk: json["admin_id_FK"] ?? "",
+        projectIdFk: json["project_id_FK"],
       );
 
   Map<String, dynamic> toJson() => {
-        "User_id": userId,
+        "user_id": userId,
         "National_ID": nationalId,
         "User_prefix": userPrefix,
         "User_Fname": userFname,
@@ -72,11 +72,10 @@ class UserModel {
         "User_age": userAge,
         "User_phone_num": userPhoneNum,
         "User_email": userEmail,
-        "User_status": userStatus,
+        "user_status": userStatus,
         "User_Image": userImage,
         "User_file": userFile,
         "admin_id_FK": adminIdFk,
-        "project_id_fk": projectIdFk,
+        "project_id_FK": projectIdFk,
       };
-      
 }

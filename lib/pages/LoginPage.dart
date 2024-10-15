@@ -27,6 +27,25 @@ class _LoginScreenState extends State<LoginScreen> {
   int selectedIndex = 0;
   bool showOption = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _checkIfLoggedIn(); // ตรวจสอบสถานะการล็อกอิน
+  }
+
+  void _checkIfLoggedIn() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final adminProvider = Provider.of<AdminProvider>(context, listen: false);
+      if (adminProvider.admin != null) {
+        // หากผู้ใช้ล็อกอินอยู่แล้ว ให้ไปที่หน้า HomeAdminScreen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeAdminScreen()),
+        );
+      }
+    });
+  }
+
   void _login() async {
     if (_formKey.currentState!.validate()) {
       try {

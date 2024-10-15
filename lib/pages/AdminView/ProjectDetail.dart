@@ -5,10 +5,11 @@ import 'package:project_smp_tsu_application/controllers/project_controller.dart'
 import 'package:project_smp_tsu_application/models/project_model.dart';
 import 'package:project_smp_tsu_application/pages/AdminView/EditProject.dart';
 import 'package:project_smp_tsu_application/pages/AdminView/HomeAdmin.dart';
+import 'package:project_smp_tsu_application/pages/AdminView/PartcipantList.dart';
+import 'package:project_smp_tsu_application/pages/AdminView/documentView.dart';
 import 'package:project_smp_tsu_application/pages/LoginPage.dart';
 import 'package:project_smp_tsu_application/provider/admin_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import 'dart:math';
 import 'package:project_smp_tsu_application/widget/customCliper.dart';
@@ -280,12 +281,55 @@ class ProjectDetailsScreen extends StatelessWidget {
                             child: const Text('ดูเอกสาร',
                                 style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xffFBA834),
+                              backgroundColor: const Color(0xff006400),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 12, horizontal: 20),
                             ),
                           ),
                           const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            HomeAdminScreen()),
+                                  );
+                                },
+                                child: const Text('กลับไปหน้ารายการ',
+                                    style: TextStyle(color: Colors.white)),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xff000099),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 20),
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          PartcipantListScreen(
+                                        project: project,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: const Text('ตรวจสอบรายชื่อ',
+                                    style: TextStyle(color: Colors.white)),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      const Color(0xffFBA834), // Button color
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 20),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
@@ -296,25 +340,6 @@ class ProjectDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-// สร้างหน้าจอสำหรับดูเอกสาร (สมมุติว่าใช้เปิดไฟล์จาก assets หรือ URL)
-class DocumentViewerScreen extends StatelessWidget {
-  final String fileUrl;
-
-  const DocumentViewerScreen({super.key, required this.fileUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('ดูเอกสาร'),
-      ),
-      body: fileUrl.isNotEmpty
-          ? SfPdfViewer.network(fileUrl)
-          : Center(child: const Text('ไม่สามารถแสดงเอกสารได้')),
     );
   }
 }

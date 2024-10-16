@@ -12,7 +12,7 @@ import 'package:project_smp_tsu_application/widget/customCliper.dart';
 class EditProjectScreen extends StatefulWidget {
   final ProjectModel project;
 
-  const EditProjectScreen({Key? key, required this.project}) : super(key: key);
+  const EditProjectScreen({super.key, required this.project});
 
   @override
   _EditProjectScreenState createState() => _EditProjectScreenState();
@@ -49,12 +49,10 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       String? filePath = result.files.single.path;
-      if (filePath != null) {
-        setState(() {
-          _uploadedFilePath = filePath; // Store the file path for later upload
-        });
-      }
-    }
+      setState(() {
+        _uploadedFilePath = filePath; // Store the file path for later upload
+      });
+        }
   }
 
   Future<String> _uploadFile(String filePath) async {
@@ -71,7 +69,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Error uploading file: $e')));
-      throw e; // Rethrow for further handling
+      rethrow; // Rethrow for further handling
     }
   }
 
@@ -98,45 +96,43 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       lastDate: lastDate,
     );
 
-    if (selectedDate != null) {
-      TimeOfDay? selectedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(isStartDate
-            ? _startDate ?? DateTime.now()
-            : _endDate ?? DateTime.now()),
-      );
+    TimeOfDay? selectedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(isStartDate
+          ? _startDate ?? DateTime.now()
+          : _endDate ?? DateTime.now()),
+    );
 
-      if (selectedTime != null) {
-        setState(
-          () {
-            DateTime combinedDateTime = DateTime(
-              selectedDate.year,
-              selectedDate.month,
-              selectedDate.day,
-              selectedTime.hour,
-              selectedTime.minute,
-            );
+    if (selectedDate != null && selectedTime != null) {
+      setState(
+        () {
+          DateTime combinedDateTime = DateTime(
+            selectedDate.year,
+            selectedDate.month,
+            selectedDate.day,
+            selectedTime.hour,
+            selectedTime.minute,
+          );
 
-            if (isStartDate) {
-              _startDate = combinedDateTime;
-              _startDateController.text = formatDate(_startDate);
+          if (isStartDate) {
+            _startDate = combinedDateTime;
+            _startDateController.text = formatDate(_startDate);
+          } else {
+            if (combinedDateTime.isBefore(_startDate!)) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content:
+                        Text('วันหมดอายุไม่สามารถก่อนวันเปิดรับสมัครได้')),
+              );
             } else {
-              if (combinedDateTime.isBefore(_startDate!)) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content:
-                          Text('วันหมดอายุไม่สามารถก่อนวันเปิดรับสมัครได้')),
-                );
-              } else {
-                _endDate = combinedDateTime;
-                _endDateController.text = formatDate(_endDate);
-              }
+              _endDate = combinedDateTime;
+              _endDateController.text = formatDate(_endDate);
             }
-          },
-        );
-      }
+          }
+        },
+      );
     }
-  }
+    }
 
   void _editProject() async {
     if (_formKey.currentState!.validate()) {
@@ -167,19 +163,19 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
         // Check if the project was updated successfully
         if (response.statusCode == 200) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('แก้ไขโครงการเรียบร้อยแล้ว')),
+            const SnackBar(content: Text('แก้ไขโครงการเรียบร้อยแล้ว')),
           );
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomeAdminScreen()),
+            MaterialPageRoute(builder: (context) => const HomeAdminScreen()),
           );
         } else if (response.statusCode == 401) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => LoginScreen()),
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
           );
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
                 content: Text('Refresh token expired. Please login again.')),
           );
         }
@@ -200,19 +196,19 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
         // Check if the project was updated successfully
         if (response.statusCode == 200) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('แก้ไขโครงการเรียบร้อยแล้ว')),
+            const SnackBar(content: Text('แก้ไขโครงการเรียบร้อยแล้ว')),
           );
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomeAdminScreen()),
+            MaterialPageRoute(builder: (context) => const HomeAdminScreen()),
           );
         } else if (response.statusCode == 401) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => LoginScreen()),
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
           );
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
                 content: Text('Refresh token expired. Please login again.')),
           );
         }
@@ -241,7 +237,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: height,
         child: Stack(
           children: [
@@ -325,9 +321,11 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                           const SizedBox(height: 20),
                           ElevatedButton(
                             onPressed: _selectFile,
-                            child: Row(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xffFBA834)),
+                            child: const Row(
                               mainAxisSize: MainAxisSize.min,
-                              children: const [
+                              children: [
                                 Icon(Icons.drive_folder_upload_rounded,
                                     color: Colors.white),
                                 SizedBox(width: 8),
@@ -336,8 +334,6 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
                                         color: Colors.white, fontSize: 16)),
                               ],
                             ),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xffFBA834)),
                           ),
                           if (_uploadedFilePath != null)
                             Padding(
@@ -404,7 +400,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       decoration: InputDecoration(
         labelText: label,
         hintText: hintText,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
       ),
     );
   }
@@ -422,7 +418,7 @@ class _EditProjectScreenState extends State<EditProjectScreen> {
       decoration: InputDecoration(
         labelText: label,
         hintText: hintText,
-        border: OutlineInputBorder(),
+        border: const OutlineInputBorder(),
         suffixIcon: const Icon(Icons.calendar_today),
       ),
     );

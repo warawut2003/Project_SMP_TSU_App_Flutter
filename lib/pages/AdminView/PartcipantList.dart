@@ -7,7 +7,6 @@ import 'package:project_smp_tsu_application/models/project_model.dart';
 import 'package:project_smp_tsu_application/models/user_model.dart';
 import 'package:project_smp_tsu_application/pages/AdminView/ProjectDetail.dart';
 import 'package:project_smp_tsu_application/pages/AdminView/UserDetail.dart';
-import 'package:project_smp_tsu_application/pages/AdminView/AddProject.dart';
 import 'package:project_smp_tsu_application/widget/customCliper.dart';
 
 class PartcipantListScreen extends StatefulWidget {
@@ -97,7 +96,7 @@ class _PartcipantListScreenState extends State<PartcipantListScreen> {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: height,
         child: Stack(
           children: [

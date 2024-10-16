@@ -30,7 +30,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: height,
         child: Stack(
           children: [
@@ -171,7 +171,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => AddProjectScreen(),
+                            builder: (context) => const AddProjectScreen(),
                           ),
                         );
                       },
@@ -192,7 +192,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                HomePage(), // Replace with your actual HomePage widget
+                                const HomePage(), // Replace with your actual HomePage widget
                           ),
                         );
                       },

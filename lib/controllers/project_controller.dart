@@ -21,7 +21,7 @@ class ProjectController {
         Uri.parse('$apiURL/api/admin/projects'),
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer ${accessToken}", // ใส่ accessToken ใน header
+          "Authorization": "Bearer $accessToken", // ใส่ accessToken ใน header
         },
       );
       if (response.statusCode == 200) {
@@ -34,7 +34,7 @@ class ProjectController {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => LoginScreen(),
+            builder: (context) => const LoginScreen(),
           ),
         );
         throw Exception(

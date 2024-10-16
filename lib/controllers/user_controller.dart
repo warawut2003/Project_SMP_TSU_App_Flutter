@@ -18,10 +18,12 @@ class UserController {
 
     try {
       final response = await http.get(
-        Uri.parse('$apiURL/api/admin/get/users/$projectID'),
+        Uri.parse('$apiURL/api/admin/get/users/$projectID',
+        ),
+        
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer ${accessToken}", // ใส่ accessToken ใน header
+          "Authorization": "Bearer $accessToken", // ใส่ accessToken ใน header
         },
       );
       print(response.statusCode);
@@ -35,7 +37,7 @@ class UserController {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => LoginScreen(),
+            builder: (context) => const LoginScreen(),
           ),
         );
         throw Exception(
@@ -55,6 +57,42 @@ class UserController {
       throw Exception('Failed to load products');
     }
   }
+
+
+Future<UserModel?> searchUserByNationalId(
+    BuildContext context, String nationalId, String projectID) async {
+  try {
+    final response = await http.get(
+      Uri.parse('$apiURL/api/get/$nationalId?project_id=$projectID'),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
+    print(response.statusCode);print(nationalId);
+      print(projectID);
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      if (jsonResponse != null) {
+        return UserModel.fromJson(jsonResponse);
+      } else {
+        print('Invalid response data');
+        return null;
+      }
+    } else if (response.statusCode == 404) {
+      print('User not found');
+      return null;
+    } else {
+      print('Error: ${response.statusCode} ${response.reasonPhrase}');
+      return null;
+    }
+  } catch (err) {
+    print('Failed to search user by national ID: $err');
+    return null;
+  }
+}
+
+
 
   Future<http.Response> updateProject(
       BuildContext context, String userId, String status) async {
@@ -224,4 +262,6 @@ class UserController {
       throw Exception('Failed to load products');
     }
   }
+
+  
 }

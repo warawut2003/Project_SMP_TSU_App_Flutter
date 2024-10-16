@@ -59,7 +59,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
         '${widget.user.userDateBirth.day}/${widget.user.userDateBirth.month}/${widget.user.userDateBirth.year}';
 
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: height,
         width: width,
         child: Stack(
@@ -117,7 +117,7 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Colors.black26,
                               blurRadius: 8,
@@ -145,48 +145,48 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'รหัสผู้ใช้',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
                             ),
                           ),
                           Text(
-                            '${widget.user.userId}',
+                            widget.user.userId,
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'หมายเลขประจำตัวประชาชน',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
                             ),
                           ),
                           Text(
-                            '${widget.user.nationalId}',
+                            widget.user.nationalId,
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'คำนำหน้า',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
                             ),
                           ),
                           Text(
-                            '${widget.user.userPrefix}',
+                            widget.user.userPrefix,
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'ชื่อ-นามสกุล',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
@@ -197,22 +197,22 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'เพศ',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
                             ),
                           ),
                           Text(
-                            '${widget.user.userGender}',
+                            widget.user.userGender,
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'วันเกิด',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
@@ -223,9 +223,9 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'อายุ',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
@@ -236,35 +236,35 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'เบอร์โทร',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
                             ),
                           ),
                           Text(
-                            '${widget.user.userPhoneNum}',
+                            widget.user.userPhoneNum,
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'อีเมล',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
                             ),
                           ),
                           Text(
-                            '${widget.user.userEmail}',
+                            widget.user.userEmail,
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'สถานะผู้ใช้',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
@@ -291,9 +291,9 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                             child: const Text('อัพเดทสถานะ'),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'ไฟล์เอกสาร',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
@@ -315,16 +315,16 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                           ),
 
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'รหัสโครงการที่เกี่ยวข้อง',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
                             ),
                           ),
                           Text(
-                            '${widget.user.projectIdFk}',
+                            widget.user.projectIdFk,
                             style: const TextStyle(fontSize: 18),
                           ),
 
@@ -340,13 +340,13 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                                 ),
                               );
                             },
-                            child: const Text('กลับ',
-                                style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xff006400),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 12, horizontal: 20),
                             ),
+                            child: const Text('กลับ',
+                                style: TextStyle(color: Colors.white)),
                           ),
                         ],
                       ),

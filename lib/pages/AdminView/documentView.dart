@@ -14,7 +14,7 @@ class DocumentViewerScreen extends StatelessWidget {
       ),
       body: fileUrl.isNotEmpty
           ? SfPdfViewer.network(fileUrl) // Use the syncfusion PDF viewer
-          : Center(child: const Text('ไม่สามารถแสดงเอกสารได้')),
+          : const Center(child: Text('ไม่สามารถแสดงเอกสารได้')),
     );
   }
 }

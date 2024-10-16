@@ -79,7 +79,7 @@ class AuthController {
       adminProvider
           .updateAccessToken(accessToken); // แก้ไขให้รับแค่ accessToken
     } else if (response.statusCode == 401) {
-      final accessToken = "";
+      const accessToken = "";
       adminProvider
           .updateAccessToken(accessToken); // แก้ไขให้รับแค่ accessToken
     } else {

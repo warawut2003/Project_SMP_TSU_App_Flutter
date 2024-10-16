@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:project_smp_tsu_application/controllers/project_controller.dart';
-
-import 'package:project_smp_tsu_application/models/project_model.dart'; // Import your Project Model
-
+import 'package:project_smp_tsu_application/controllers/user_controller.dart';
+import 'package:project_smp_tsu_application/models/project_model.dart';
 import 'package:project_smp_tsu_application/pages/AdminView/documentView.dart';
+import 'package:project_smp_tsu_application/pages/User/%E0%B9%8AUserDetails.dart';
 import 'package:project_smp_tsu_application/pages/User/registerProject.dart';
 
 class ListProject extends StatefulWidget {
@@ -17,6 +16,7 @@ class ListProject extends StatefulWidget {
 class _ListProjectState extends State<ListProject> {
   List<ProjectModel> projects = [];
   bool isLoading = true;
+  String userData = ''; // To store the fetched user data
 
   @override
   void initState() {
@@ -41,105 +41,194 @@ class _ListProjectState extends State<ListProject> {
     }
   }
 
+  void _showSearchDialog() {
+  final TextEditingController idController = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('ค้นหาโครงการ'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: idController,
+              decoration: const InputDecoration(
+                labelText: 'กรอกเลขบัตรประชาชน',
+              ),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () async {
+                String nationalId = idController.text.trim();
+                if (nationalId.isNotEmpty) {
+                  if (projects.isNotEmpty) {
+                    String projectId = projects[0].projectId; // ดึง projectId จากโครงการล่าสุด
+                    try {
+                      // ค้นหาข้อมูลผู้ใช้ตามเลขบัตรประชาชนและ projectId
+                      final user = await UserController().searchUserByNationalId(context, nationalId, projectId);
+                      if (user != null) {
+                        Navigator.pop(context); // ปิด dialog
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => UserDetailsPage(user: user),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('ไม่พบข้อมูลผู้ใช้')),
+                        );
+                      }
+                    } catch (error) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('เกิดข้อผิดพลาดในการค้นหาข้อมูลผู้ใช้')),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('ไม่มีข้อมูลโครงการ')),
+                    );
+                  }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('กรุณากรอกเลขบัตรประชาชน')),
+                  );
+                }
+              },
+              child: const Text('ค้นหา'),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('โครงการ วมว. - มอ.ทักษิณ'),
         backgroundColor: Colors.pinkAccent,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search), // Add a search icon
+            onPressed: _showSearchDialog, // Show search dialog on press
+          ),
+        ],
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: projects.length,
-              itemBuilder: (context, index) {
-                final project = projects[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 16.0),
-                  child: Card(
-                    child: ExpansionTile(
-                      title: Text(
-                        'โครงการ วมว ปีการศึกษา ${project.projectName}',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                        ),
-                      ),
-                      children: <Widget>[
-                        ListTile(
-                          title: const Text('รายละเอียดโครงการ'),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('ชื่อโครงการ: ${project.projectName}'),
-                              Text(
-                                  'วันที่เริ่มต้น: ${project.projectStartDate}'),
-                              Text(
-                                  'วันที่สิ้นสุด: ${project.projectExpirationDate}'),
-                              const SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      if (project.projectFile != null &&
-                                          project.projectFile!.isNotEmpty) {
-                                        // Open Document Viewer
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                DocumentViewerScreen(
-                                                    fileUrl:
-                                                        project.projectFile),
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: projects.length,
+                    itemBuilder: (context, index) {
+                      final project = projects[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 16.0),
+                        child: Card(
+                          child: ExpansionTile(
+                            title: Text(
+                              'โครงการ วมว ปีการศึกษา ${project.projectName}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blueAccent,
+                              ),
+                            ),
+                            children: <Widget>[
+                              ListTile(
+                                title: const Text('รายละเอียดโครงการ'),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('ชื่อโครงการ: ${project.projectName}'),
+                                    Text(
+                                        'วันที่เริ่มต้น: ${project.projectStartDate}'),
+                                    Text(
+                                        'วันที่สิ้นสุด: ${project.projectExpirationDate}'),
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            if (project
+                                                .projectFile.isNotEmpty) {
+                                              // Open Document Viewer
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DocumentViewerScreen(
+                                                          fileUrl: project
+                                                              .projectFile),
+                                                ),
+                                              );
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                      content: Text(
+                                                          'ไม่พบไฟล์เอกสาร')));
+                                            }
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color(0xffFBA834),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12, horizontal: 20),
                                           ),
-                                        );
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content:
-                                                    Text('ไม่พบไฟล์เอกสาร')));
-                                      }
-                                    },
-                                    child: const Text('ดูเอกสาร',
-                                        style: TextStyle(color: Colors.white)),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xffFBA834),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12, horizontal: 20),
-                                    ),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => RegisterProjectPage(
-                                              project:
-                                                  project), // Pass project details if needed
+                                          child: const Text('ดูเอกสาร',
+                                              style: TextStyle(
+                                                  color: Colors.white)),
                                         ),
-                                      );
-                                    }, // Call the modified function
-                                    child: const Text('สมัครโครงการ',
-                                        style: TextStyle(color: Colors.white)),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color(0xffFBA834),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12, horizontal: 20),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegisterProjectPage(
+                                                        project:
+                                                            project), // Pass project details if needed
+                                              ),
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color(0xffFBA834),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12, horizontal: 20),
+                                          ),
+                                          child: const Text('สมัครโครงการ',
+                                              style: TextStyle(
+                                                  color: Colors.white)),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+                if (userData.isNotEmpty) // Display user data if available
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text('ข้อมูลผู้ใช้: $userData'),
+                  ),
+              ],
             ),
     );
   }

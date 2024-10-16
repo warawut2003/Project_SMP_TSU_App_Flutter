@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
 class TextWithBorderPainter extends CustomPainter {
   final String text;
@@ -21,7 +20,7 @@ class TextWithBorderPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     )..layout();
 
-    final offset = Offset.zero;
+    const offset = Offset.zero;
     textPainter.paint(canvas, offset);
 
     final paint = Paint()

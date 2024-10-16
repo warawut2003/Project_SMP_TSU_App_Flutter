@@ -50,12 +50,12 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
             if (response.statusCode == 201) {
               // Success action here (e.g., navigate back or show success message)
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('เพิ่มโครงการเรียบร้อยแล้ว')),
+                const SnackBar(content: Text('เพิ่มโครงการเรียบร้อยแล้ว')),
               );
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HomeAdminScreen(),
+                  builder: (context) => const HomeAdminScreen(),
                 ),
               );
             } else if (response.statusCode == 401) {
@@ -63,11 +63,11 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => LoginScreen(),
+                builder: (context) => const LoginScreen(),
               ),
             );
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+              const SnackBar(
                   content: Text('Refresh token expired. Please login again.')),
             );
           }
@@ -80,7 +80,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
       } else {
         // Show a message if no file was uploaded
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('กรุณาเลือกไฟล์ก่อนบันทึก')),
+          const SnackBar(content: Text('กรุณาเลือกไฟล์ก่อนบันทึก')),
         );
       }
     }
@@ -92,7 +92,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: height,
         child: Stack(
           children: [
@@ -178,9 +178,12 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                             onPressed: () async {
                               await _selectFile();
                             },
-                            child: Row(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xffFBA834),
+                            ),
+                            child: const Row(
                                 mainAxisSize: MainAxisSize.min,
-                                children: const [
+                                children: [
                                   Icon(
                                     Icons.drive_folder_upload_rounded,
                                     color: Colors.white,
@@ -194,9 +197,6 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                                         color: Colors.white, fontSize: 16),
                                   ),
                                 ]),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xffFBA834),
-                            ),
                           ),
                           if (_uploadedFilePath != null)
                             Padding(
@@ -257,12 +257,10 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
     if (result != null) {
       String? filePath = result.files.single.path;
-      if (filePath != null) {
-        setState(() {
-          _uploadedFilePath = filePath; // Store the file path for later upload
-        });
-      }
-    }
+      setState(() {
+        _uploadedFilePath = filePath; // Store the file path for later upload
+      });
+        }
   }
 
   Future<String> _uploadFile(String filePath) async {
@@ -279,7 +277,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('Error uploading file: $e')));
-      throw e;
+      rethrow;
     }
   }
 
@@ -291,33 +289,31 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
       firstDate: isStartDate ? DateTime.now() : _startDate ?? DateTime.now(),
       lastDate: DateTime(2101),
     );
-    if (pickedDate != null) {
-      TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
-      if (pickedTime != null) {
-        setState(() {
-          DateTime fullDate = DateTime(
-            pickedDate.year,
-            pickedDate.month,
-            pickedDate.day,
-            pickedTime.hour,
-            pickedTime.minute,
-          );
-          if (isStartDate) {
-            _startDate = fullDate;
-            _startDateController.text =
-                fullDate.toLocal().toString().split('.')[0];
-          } else {
-            _endDate = fullDate;
-            _endDateController.text =
-                fullDate.toLocal().toString().split('.')[0];
-          }
-        });
-      }
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (pickedDate != null && pickedTime != null) {
+      setState(() {
+        DateTime fullDate = DateTime(
+          pickedDate.year,
+          pickedDate.month,
+          pickedDate.day,
+          pickedTime.hour,
+          pickedTime.minute,
+        );
+        if (isStartDate) {
+          _startDate = fullDate;
+          _startDateController.text =
+              fullDate.toLocal().toString().split('.')[0];
+        } else {
+          _endDate = fullDate;
+          _endDateController.text =
+              fullDate.toLocal().toString().split('.')[0];
+        }
+      });
     }
-  }
+    }
 
   Widget _buildTextFormField({
     required TextEditingController controller,

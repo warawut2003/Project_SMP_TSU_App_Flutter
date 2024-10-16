@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
         // หากผู้ใช้ล็อกอินอยู่แล้ว ให้ไปที่หน้า HomeAdminScreen
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomeAdminScreen()),
+          MaterialPageRoute(builder: (context) => const HomeAdminScreen()),
         );
       }
     });
@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomeAdminScreen()),
+          MaterialPageRoute(builder: (context) => const HomeAdminScreen()),
         );
       } catch (e) {
         print(e);
@@ -280,7 +280,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RegisterScreen(),
+                                builder: (context) => const RegisterScreen(),
                               ),
                             );
                           },

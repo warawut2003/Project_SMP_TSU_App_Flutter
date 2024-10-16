@@ -61,8 +61,8 @@ class ProjectDetailsScreen extends StatelessWidget {
     if (confirmDelete == true) {
       try {
         // ถ้ามีไฟล์ projectFile ให้ทำการลบไฟล์ออกจาก Firebase Storage
-        if (project.projectFile != null && project.projectFile!.isNotEmpty) {
-          await deleteFileFromFirebase(project.projectFile!);
+        if (project.projectFile.isNotEmpty) {
+          await deleteFileFromFirebase(project.projectFile);
         }
 
         final response =
@@ -71,19 +71,19 @@ class ProjectDetailsScreen extends StatelessWidget {
         if (response.statusCode == 200) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomeAdminScreen()),
+            MaterialPageRoute(builder: (context) => const HomeAdminScreen()),
           );
 
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('ลบสินค้าสำเร็จ')));
+              .showSnackBar(const SnackBar(content: Text('ลบสินค้าสำเร็จ')));
           // เรียกใช้งาน _fetchProducts เพื่อดึงข้อมูลสินค้าใหม่
         } else if (response.statusCode == 401) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => LoginScreen()),
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
           );
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
                 content: Text('Refresh token expired. Please login again.')),
           );
         }
@@ -109,7 +109,7 @@ class ProjectDetailsScreen extends StatelessWidget {
         formatter.format(project.projectExpirationDate.toLocal());
 
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: height,
         width: width,
         child: Stack(
@@ -170,7 +170,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Colors.black26,
                               blurRadius: 8,
@@ -209,35 +209,35 @@ class ProjectDetailsScreen extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 8),
-                          Text(
+                          const Text(
                             'รหัสโครงการ',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
                             ),
                           ),
                           Text(
-                            '${project.projectId}',
+                            project.projectId,
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'ชื่อโครงการ',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
                             ),
                           ),
                           Text(
-                            '${project.projectName}',
+                            project.projectName,
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'วันเปิดรับสมัคร',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
@@ -248,9 +248,9 @@ class ProjectDetailsScreen extends StatelessWidget {
                             style: const TextStyle(fontSize: 18),
                           ),
                           const SizedBox(height: 20),
-                          Text(
+                          const Text(
                             'วันหมดเขต',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: Color(0xffC7253E), // Heading color
@@ -263,8 +263,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                           const SizedBox(height: 30),
                           ElevatedButton(
                             onPressed: () async {
-                              if (project.projectFile != null &&
-                                  project.projectFile!.isNotEmpty) {
+                              if (project.projectFile.isNotEmpty) {
                                 // Open Document Viewer
                                 Navigator.push(
                                   context,
@@ -275,16 +274,16 @@ class ProjectDetailsScreen extends StatelessWidget {
                                 );
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('ไม่พบไฟล์เอกสาร')));
+                                    const SnackBar(content: Text('ไม่พบไฟล์เอกสาร')));
                               }
                             },
-                            child: const Text('ดูเอกสาร',
-                                style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xff006400),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 12, horizontal: 20),
                             ),
+                            child: const Text('ดูเอกสาร',
+                                style: TextStyle(color: Colors.white)),
                           ),
                           const SizedBox(height: 20),
                           Row(
@@ -296,16 +295,16 @@ class ProjectDetailsScreen extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            HomeAdminScreen()),
+                                            const HomeAdminScreen()),
                                   );
                                 },
-                                child: const Text('กลับไปหน้ารายการ',
-                                    style: TextStyle(color: Colors.white)),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xff000099),
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 12, horizontal: 20),
                                 ),
+                                child: const Text('กลับไปหน้ารายการ',
+                                    style: TextStyle(color: Colors.white)),
                               ),
                               ElevatedButton(
                                 onPressed: () {
@@ -319,14 +318,14 @@ class ProjectDetailsScreen extends StatelessWidget {
                                     ),
                                   );
                                 },
-                                child: const Text('ตรวจสอบรายชื่อ',
-                                    style: TextStyle(color: Colors.white)),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor:
                                       const Color(0xffFBA834), // Button color
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 12, horizontal: 20),
                                 ),
+                                child: const Text('ตรวจสอบรายชื่อ',
+                                    style: TextStyle(color: Colors.white)),
                               ),
                             ],
                           ),

@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage>
   static final List<Widget> _widgetOptions = <Widget>[
     const Center(child: Text('หน้าหลัก', style: TextStyle(fontSize: 24))),
     const Center(child: Text('ข้อมูลโครงการ', style: TextStyle(fontSize: 24))),
-    ListProject(), // เรียกหน้าที่ใช้แสดงรายการโครงการ (ListProject.dart)
+    const ListProject(), // เรียกหน้าที่ใช้แสดงรายการโครงการ (ListProject.dart)
     const Center(child: Text('ข่าวสาร/กิจกรรม', style: TextStyle(fontSize: 24))),
   ];
 
@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage>
               Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => LoginScreen(),
+                                builder: (context) => const LoginScreen(),
                               ),
                             );
             },

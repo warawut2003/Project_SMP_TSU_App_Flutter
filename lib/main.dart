@@ -1,13 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:project_smp_tsu_application/pages/HomePage.dart';
-import 'package:project_smp_tsu_application/pages/LoginPage.dart';
 import 'package:project_smp_tsu_application/provider/admin_provider.dart';
 import 'package:project_smp_tsu_application/provider/project_provider.dart';
 import 'package:project_smp_tsu_application/provider/user_providers.dart';
 import 'package:provider/provider.dart';
-import 'package:project_smp_tsu_application/pages/User/registerProject.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
@@ -36,7 +33,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
+        home: const HomePage(),
         // กำหนด Localizations สำหรับภาษาไทย
         locale: const Locale('th'), // กำหนดให้แอปใช้ภาษาไทย
         supportedLocales: const [

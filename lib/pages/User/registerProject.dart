@@ -3,19 +3,14 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:project_smp_tsu_application/controllers/project_controller.dart';
 import 'package:project_smp_tsu_application/controllers/user_controller.dart';
 import 'package:project_smp_tsu_application/models/project_model.dart';
 import 'package:project_smp_tsu_application/pages/HomePage.dart';
-import 'package:http/http.dart' as http;
-import 'package:project_smp_tsu_application/provider/project_provider.dart';
-import 'package:provider/provider.dart';
 
 class RegisterProjectPage extends StatefulWidget {
   final ProjectModel project;
 
-  const RegisterProjectPage({Key? key, required this.project})
-      : super(key: key);
+  const RegisterProjectPage({super.key, required this.project});
   @override
   _RegisterProjectPageState createState() => _RegisterProjectPageState();
 }
@@ -120,7 +115,7 @@ class _RegisterProjectPageState extends State<RegisterProjectPage> {
       await ref.putFile(File(filePath));
       return await ref.getDownloadURL();
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -130,16 +125,14 @@ class _RegisterProjectPageState extends State<RegisterProjectPage> {
         allowedExtensions: isImage ? null : ['pdf', 'doc', 'docx']);
     if (result != null) {
       String? filePath = result.files.single.path;
-      if (filePath != null) {
-        setState(() {
-          if (isImage) {
-            _uploadedImagePath = filePath;
-          } else {
-            _uploadedDocumentPath = filePath;
-          }
-        });
-      }
-    }
+      setState(() {
+        if (isImage) {
+          _uploadedImagePath = filePath;
+        } else {
+          _uploadedDocumentPath = filePath;
+        }
+      });
+        }
   }
 
   @override
@@ -313,10 +306,10 @@ class _RegisterProjectPageState extends State<RegisterProjectPage> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _CreateNewUser,
-                  child: const Text('สมัครเข้าร่วมโครงการ'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.pinkAccent,
                   ),
+                  child: const Text('สมัครเข้าร่วมโครงการ'),
                 ),
               ],
             ),

@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // นำเข้า Firebase Storage
-import 'package:project_smp_tsu_application/models/user_model.dart'; // นำเข้า UserModel
+import 'package:project_smp_tsu_application/controllers/user_controller.dart';
+import 'package:project_smp_tsu_application/models/user_model.dart';
+import 'package:project_smp_tsu_application/pages/HomePage.dart'; // นำเข้า UserModel
 
 class UserDetailsPage extends StatefulWidget {
   final UserModel user;
@@ -49,9 +51,10 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     try {
       FirebaseStorage storage = FirebaseStorage.instance;
       Reference ref = storage.ref().child(
-          'assets/documents/${widget.user.nationalId}/${DateTime.now().millisecondsSinceEpoch}');
+          'assets/users/document/${widget.user.userFname} ${widget.user.userLname}/${DateTime.now().millisecondsSinceEpoch}');
       await ref.putFile(File(filePath)); // อัปโหลดไฟล์
-      String downloadURL = await ref.getDownloadURL(); // รับ URL ของไฟล์ที่อัปโหลด
+      String downloadURL =
+          await ref.getDownloadURL(); // รับ URL ของไฟล์ที่อัปโหลด
       return downloadURL;
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -60,7 +63,6 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
     }
   }
 
-  // ฟังก์ชันจัดการการอัปโหลดไฟล์
   Future<void> _handleUpload() async {
     if (_uploadedFilePath != null) {
       // ตรวจสอบว่ามีไฟล์เก่าหรือไม่ ถ้ามี ให้ลบก่อน
@@ -68,15 +70,39 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         await _deleteOldFile(widget.user.userFile);
       }
 
-      // อัปโหลดไฟล์ใหม่
-      String newFileUrl = await _uploadFile(_uploadedFilePath!);
+      try {
+        // อัปโหลดไฟล์ใหม่
+        String newFileUrl = await _uploadFile(_uploadedFilePath!);
 
-      // แสดงผลลัพธ์การอัปโหลด
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('อัปโหลดไฟล์สำเร็จ')),
-      );
+        // อัปเดตข้อมูลผู้ใช้ด้วย URL ของไฟล์ใหม่ และเปลี่ยนสถานะเป็น "รอการตรวจสอบ"
+        final response = await UserController()
+            .updateFileUser(context, newFileUrl, widget.user.userId);
 
-      // อัปเดตข้อมูลผู้ใช้ด้วย URL ของไฟล์ใหม่ (เชื่อมต่อ backend เพื่ออัปเดตในฐานข้อมูลถ้าจำเป็น)
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('อัปโหลดไฟล์สำเร็จ และเปลี่ยนสถานะเป็นรอการตรวจสอบ'),
+            ),
+          );
+
+          // Navigate back to the HomePage after a short delay
+          Future.delayed(const Duration(seconds: 1), () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('เกิดข้อผิดพลาดในการอัปเดตสถานะ')),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error during upload: $e')),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('กรุณาเลือกไฟล์ก่อนอัปโหลด')),
@@ -96,19 +122,26 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('ชื่อ: ${widget.user.userFname} ${widget.user.userLname}', style: const TextStyle(fontSize: 18)),
-            Text('เลขบัตรประชาชน: ${widget.user.nationalId}', style: const TextStyle(fontSize: 16)),
-            Text('อายุ: ${widget.user.userAge}', style: const TextStyle(fontSize: 16)),
-            Text('เพศ: ${widget.user.userGender}', style: const TextStyle(fontSize: 16)),
-            Text('อีเมล: ${widget.user.userEmail}', style: const TextStyle(fontSize: 16)),
-            Text('สถานะ: ${widget.user.userStatus}', style: const TextStyle(fontSize: 16)),
+            Text('ชื่อ: ${widget.user.userFname} ${widget.user.userLname}',
+                style: const TextStyle(fontSize: 18)),
+            Text('เลขบัตรประชาชน: ${widget.user.nationalId}',
+                style: const TextStyle(fontSize: 16)),
+            Text('อายุ: ${widget.user.userAge}',
+                style: const TextStyle(fontSize: 16)),
+            Text('เพศ: ${widget.user.userGender}',
+                style: const TextStyle(fontSize: 16)),
+            Text('อีเมล: ${widget.user.userEmail}',
+                style: const TextStyle(fontSize: 16)),
+            Text('สถานะ: ${widget.user.userStatus}',
+                style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 20),
             if (widget.user.userStatus == 'เอกสารไม่ครบถ้วน') ...[
               ElevatedButton(
                 onPressed: _selectFile, // เรียกฟังก์ชันเลือกไฟล์
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 ),
                 child: const Text(
                   'เลือกไฟล์ใหม่',
@@ -120,7 +153,8 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                 onPressed: _handleUpload, // เรียกฟังก์ชันอัปโหลดไฟล์
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 ),
                 child: const Text(
                   'อัปโหลด',

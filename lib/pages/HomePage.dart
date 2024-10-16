@@ -2,21 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:project_smp_tsu_application/pages/LoginPage.dart'; // เพิ่มการนำเข้าไฟล์ใหม่ที่สร้างขึ้น
 import 'package:project_smp_tsu_application/pages/User/ListProject.dart'; // นำเข้าหน้า ListProject
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
-    );
-  }
-}
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -38,7 +23,8 @@ class _HomePageState extends State<HomePage>
     const Center(child: Text('หน้าหลัก', style: TextStyle(fontSize: 24))),
     const Center(child: Text('ข้อมูลโครงการ', style: TextStyle(fontSize: 24))),
     const ListProject(), // เรียกหน้าที่ใช้แสดงรายการโครงการ (ListProject.dart)
-    const Center(child: Text('ข่าวสาร/กิจกรรม', style: TextStyle(fontSize: 24))),
+    const Center(
+        child: Text('ข่าวสาร/กิจกรรม', style: TextStyle(fontSize: 24))),
   ];
 
   @override
@@ -51,16 +37,17 @@ class _HomePageState extends State<HomePage>
           ElevatedButton(
             onPressed: () {
               Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
-                              ),
-                            );
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginScreen(),
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Color.fromARGB(255, 37, 37, 35),
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             ),
             child: const Text(
               'สำหรับเจ้าหน้าที่',

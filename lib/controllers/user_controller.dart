@@ -18,9 +18,9 @@ class UserController {
 
     try {
       final response = await http.get(
-        Uri.parse('$apiURL/api/admin/get/users/$projectID',
+        Uri.parse(
+          '$apiURL/api/admin/get/users/$projectID',
         ),
-        
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $accessToken", // ใส่ accessToken ใน header
@@ -58,41 +58,39 @@ class UserController {
     }
   }
 
-
-Future<UserModel?> searchUserByNationalId(
-    BuildContext context, String nationalId, String projectID) async {
-  try {
-    final response = await http.get(
-      Uri.parse('$apiURL/api/get/$nationalId?project_id=$projectID'),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    );
-    print(response.statusCode);print(nationalId);
+  Future<UserModel?> searchUserByNationalId(
+      BuildContext context, String nationalId, String projectID) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$apiURL/api/get/$nationalId?project_id=$projectID'),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+      print(response.statusCode);
+      print(nationalId);
       print(projectID);
 
-    if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body);
-      if (jsonResponse != null) {
-        return UserModel.fromJson(jsonResponse);
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        if (jsonResponse != null) {
+          return UserModel.fromJson(jsonResponse);
+        } else {
+          print('Invalid response data');
+          return null;
+        }
+      } else if (response.statusCode == 404) {
+        print('User not found');
+        return null;
       } else {
-        print('Invalid response data');
+        print('Error: ${response.statusCode} ${response.reasonPhrase}');
         return null;
       }
-    } else if (response.statusCode == 404) {
-      print('User not found');
-      return null;
-    } else {
-      print('Error: ${response.statusCode} ${response.reasonPhrase}');
+    } catch (err) {
+      print('Failed to search user by national ID: $err');
       return null;
     }
-  } catch (err) {
-    print('Failed to search user by national ID: $err');
-    return null;
   }
-}
-
-
 
   Future<http.Response> updateProject(
       BuildContext context, String userId, String status) async {
@@ -263,5 +261,33 @@ Future<UserModel?> searchUserByNationalId(
     }
   }
 
-  
+  Future<http.Response> updateFileUser(
+      BuildContext context, String ProjectFile, String userID) async {
+    String UserStatus = "รอการตรวจสอบ";
+    final Map<String, dynamic> updateData = {
+      "User_file": ProjectFile,
+      "user_status": UserStatus
+    };
+
+    try {
+      // Make PUT request to update the product
+      final response = await http.put(
+        Uri.parse(
+            "$apiURL/api/update/$userID"), // Replace with the correct API endpoint
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(updateData),
+      );
+      // Handle successful product update
+      if (response.statusCode == 200) {
+        print("Product updated successfully!");
+        return response; // ส่งคืน response
+      } else {
+        throw Exception('Failed to update file');
+      }
+    } catch (error) {
+      throw Exception('Failed to update file api');
+    }
+  }
 }

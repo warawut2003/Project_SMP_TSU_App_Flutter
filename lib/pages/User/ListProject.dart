@@ -3,7 +3,7 @@ import 'package:project_smp_tsu_application/controllers/project_controller.dart'
 import 'package:project_smp_tsu_application/controllers/user_controller.dart';
 import 'package:project_smp_tsu_application/models/project_model.dart';
 import 'package:project_smp_tsu_application/pages/AdminView/documentView.dart';
-import 'package:project_smp_tsu_application/pages/User/%E0%B9%8AUserDetails.dart';
+import 'package:project_smp_tsu_application/pages/User/UserDetails.dart';
 import 'package:project_smp_tsu_application/pages/User/registerProject.dart';
 
 class ListProject extends StatefulWidget {
@@ -42,71 +42,74 @@ class _ListProjectState extends State<ListProject> {
   }
 
   void _showSearchDialog() {
-  final TextEditingController idController = TextEditingController();
+    final TextEditingController idController = TextEditingController();
 
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('ค้นหาโครงการ'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: idController,
-              decoration: const InputDecoration(
-                labelText: 'กรอกเลขบัตรประชาชน',
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('ค้นหาโครงการ'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: idController,
+                decoration: const InputDecoration(
+                  labelText: 'กรอกเลขบัตรประชาชน',
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () async {
-                String nationalId = idController.text.trim();
-                if (nationalId.isNotEmpty) {
-                  if (projects.isNotEmpty) {
-                    String projectId = projects[0].projectId; // ดึง projectId จากโครงการล่าสุด
-                    try {
-                      // ค้นหาข้อมูลผู้ใช้ตามเลขบัตรประชาชนและ projectId
-                      final user = await UserController().searchUserByNationalId(context, nationalId, projectId);
-                      if (user != null) {
-                        Navigator.pop(context); // ปิด dialog
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => UserDetailsPage(user: user),
-                          ),
-                        );
-                      } else {
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () async {
+                  String nationalId = idController.text.trim();
+                  if (nationalId.isNotEmpty) {
+                    if (projects.isNotEmpty) {
+                      String projectId = projects[0]
+                          .projectId; // ดึง projectId จากโครงการล่าสุด
+                      try {
+                        // ค้นหาข้อมูลผู้ใช้ตามเลขบัตรประชาชนและ projectId
+                        final user = await UserController()
+                            .searchUserByNationalId(
+                                context, nationalId, projectId);
+                        if (user != null) {
+                          Navigator.pop(context); // ปิด dialog
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UserDetailsPage(user: user),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('ไม่พบข้อมูลผู้ใช้')),
+                          );
+                        }
+                      } catch (error) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('ไม่พบข้อมูลผู้ใช้')),
+                          const SnackBar(
+                              content:
+                                  Text('เกิดข้อผิดพลาดในการค้นหาข้อมูลผู้ใช้')),
                         );
                       }
-                    } catch (error) {
+                    } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('เกิดข้อผิดพลาดในการค้นหาข้อมูลผู้ใช้')),
+                        const SnackBar(content: Text('ไม่มีข้อมูลโครงการ')),
                       );
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('ไม่มีข้อมูลโครงการ')),
+                      const SnackBar(content: Text('กรุณากรอกเลขบัตรประชาชน')),
                     );
                   }
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('กรุณากรอกเลขบัตรประชาชน')),
-                  );
-                }
-              },
-              child: const Text('ค้นหา'),
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
-
-
+                },
+                child: const Text('ค้นหา'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +190,8 @@ class _ListProjectState extends State<ListProject> {
                                           ),
                                           child: const Text('ดูเอกสาร',
                                               style: TextStyle(
-                                                  color: Color.fromARGB(255, 68, 67, 67))),
+                                                  color: Color.fromARGB(
+                                                      255, 68, 67, 67))),
                                         ),
                                         ElevatedButton(
                                           onPressed: () {
@@ -209,7 +213,8 @@ class _ListProjectState extends State<ListProject> {
                                           ),
                                           child: const Text('สมัครโครงการ',
                                               style: TextStyle(
-                                                  color: Color.fromARGB(255, 90, 89, 89))),
+                                                  color: Color.fromARGB(
+                                                      255, 90, 89, 89))),
                                         ),
                                       ],
                                     ),

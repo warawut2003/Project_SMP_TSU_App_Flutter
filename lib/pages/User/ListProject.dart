@@ -3,7 +3,7 @@ import 'package:project_smp_tsu_application/controllers/project_controller.dart'
 import 'package:project_smp_tsu_application/controllers/user_controller.dart';
 import 'package:project_smp_tsu_application/models/project_model.dart';
 import 'package:project_smp_tsu_application/pages/AdminView/documentView.dart';
-import 'package:project_smp_tsu_application/pages/User/%E0%B9%8AUserDetails.dart';
+import 'package:project_smp_tsu_application/pages/User/UserDetails.dart';
 import 'package:project_smp_tsu_application/pages/User/registerProject.dart';
 
 class ListProject extends StatefulWidget {

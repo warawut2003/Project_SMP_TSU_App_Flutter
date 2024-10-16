@@ -278,7 +278,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xff006400),
+                              backgroundColor: Color.fromARGB(255, 235, 172, 46),
                               padding: const EdgeInsets.symmetric(
                                   vertical: 12, horizontal: 20),
                             ),
@@ -299,12 +299,12 @@ class ProjectDetailsScreen extends StatelessWidget {
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xff000099),
+                                  backgroundColor: Color.fromARGB(255, 231, 234, 13),
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 12, horizontal: 20),
                                 ),
                                 child: const Text('กลับไปหน้ารายการ',
-                                    style: TextStyle(color: Colors.white)),
+                                    style: TextStyle(color: Color.fromARGB(255, 52, 49, 49))),
                               ),
                               ElevatedButton(
                                 onPressed: () {

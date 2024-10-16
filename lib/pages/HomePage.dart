@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage>
     return Scaffold(
       appBar: AppBar(
         title: const Text('หน้าแรก'),
-        backgroundColor: Colors.yellowAccent[100],
+        backgroundColor: Color.fromARGB(255, 238, 156, 34),
         actions: [
           ElevatedButton(
             onPressed: () {
@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage>
                             );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
+              backgroundColor: Color.fromARGB(255, 37, 37, 35),
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             ),
@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage>
         ],
         bottom: TabBar(
           controller: _tabController,
-          labelColor: Colors.blue,
+          labelColor: const Color.fromARGB(255, 61, 62, 63),
           unselectedLabelColor: Colors.grey,
           tabs: const [
             Tab(text: 'หน้าหลัก', icon: Icon(Icons.home)),

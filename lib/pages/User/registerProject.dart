@@ -140,7 +140,7 @@ class _RegisterProjectPageState extends State<RegisterProjectPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('สมัครเข้าร่วมโครงการ'),
-        backgroundColor: Colors.pinkAccent,
+        backgroundColor: Color.fromARGB(255, 236, 162, 33),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -307,7 +307,7 @@ class _RegisterProjectPageState extends State<RegisterProjectPage> {
                 ElevatedButton(
                   onPressed: _CreateNewUser,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pinkAccent,
+                    backgroundColor: Color.fromARGB(255, 236, 147, 38),
                   ),
                   child: const Text('สมัครเข้าร่วมโครงการ'),
                 ),

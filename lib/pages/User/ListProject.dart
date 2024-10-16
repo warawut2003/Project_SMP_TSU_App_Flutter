@@ -113,7 +113,7 @@ class _ListProjectState extends State<ListProject> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('โครงการ วมว. - มอ.ทักษิณ'),
-        backgroundColor: Colors.pinkAccent,
+        backgroundColor: Color.fromARGB(255, 252, 162, 53),
         actions: [
           IconButton(
             icon: const Icon(Icons.search), // Add a search icon
@@ -139,7 +139,7 @@ class _ListProjectState extends State<ListProject> {
                               'โครงการ วมว ปีการศึกษา ${project.projectName}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.blueAccent,
+                                color: Color.fromARGB(255, 62, 63, 64),
                               ),
                             ),
                             children: <Widget>[
@@ -187,7 +187,7 @@ class _ListProjectState extends State<ListProject> {
                                           ),
                                           child: const Text('ดูเอกสาร',
                                               style: TextStyle(
-                                                  color: Colors.white)),
+                                                  color: Color.fromARGB(255, 68, 67, 67))),
                                         ),
                                         ElevatedButton(
                                           onPressed: () {
@@ -209,7 +209,7 @@ class _ListProjectState extends State<ListProject> {
                                           ),
                                           child: const Text('สมัครโครงการ',
                                               style: TextStyle(
-                                                  color: Colors.white)),
+                                                  color: Color.fromARGB(255, 90, 89, 89))),
                                         ),
                                       ],
                                     ),
